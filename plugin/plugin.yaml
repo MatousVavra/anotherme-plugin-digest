@@ -1,0 +1,16 @@
+name: digest
+version: 0.1.0
+description: Daily digest of projects, people, mood, and pending questions
+author: AnotherMe
+entrypoint: plugin
+capabilities:
+  - routes
+  - events
+dependencies:
+  - memory
+settings:
+  - key: schedule
+    label: "Generation schedule"
+    type: text
+    default: "daily"
+    description: "When to generate digests"
