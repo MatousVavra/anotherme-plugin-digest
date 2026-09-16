@@ -1,5 +1,5 @@
 name: digest
-version: 0.1.0
+version: 0.2.0
 description: Daily digest of projects, people, mood, and pending questions
 author: AnotherMe
 entrypoint: plugin
@@ -8,6 +8,9 @@ capabilities:
   - events
 dependencies:
   - memory
+soft_dependencies:
+  - name: chat
+    enables: "conversation count in digest"
 settings:
   - key: schedule
     label: "Generation schedule"

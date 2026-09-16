@@ -1,6 +1,20 @@
 import asyncio
+import sqlite3
 
 from fastapi import APIRouter
+
+
+def _count_rows(conn, table: str, vault_name: str) -> int:
+    """Count rows in another plugin's table. Returns 0 when the table does
+    not exist (soft dependency on chat is not installed)."""
+    row = conn.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name = ?", (table,)
+    ).fetchone()
+    if row is None:
+        return 0
+    return conn.execute(
+        f"SELECT COUNT(*) FROM {table} WHERE vault_name = ?", (vault_name,)
+    ).fetchone()[0]
 
 
 class Plugin:
@@ -48,9 +62,7 @@ class Plugin:
                     break
 
         conn = self._db.get_db()
-        convos_count = conn.execute(
-            "SELECT COUNT(*) FROM chat_threads WHERE vault_name = ?", (vault_name,)
-        ).fetchone()[0]
+        convos_count = _count_rows(conn, "chat_threads", vault_name)
 
         last_mood = None
         diary_dir = vault / "Diary"
