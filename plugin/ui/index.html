@@ -1,0 +1,76 @@
+<div class="digest-layout" x-data="digestPlugin()">
+    <template x-if="loading">
+        <div>
+            <div class="digest-header">
+                <div class="digest-skeleton digest-skeleton-title"></div>
+            </div>
+            <div class="digest-grid">
+                <div class="digest-card digest-skeleton"></div>
+                <div class="digest-card digest-skeleton"></div>
+                <div class="digest-card digest-skeleton"></div>
+                <div class="digest-card digest-skeleton"></div>
+            </div>
+        </div>
+    </template>
+    <template x-if="error">
+        <div class="digest-error">
+            <p x-text="error"></p>
+            <button class="digest-retry-btn" @click="load()">Try again</button>
+        </div>
+    </template>
+    <template x-if="!loading && !error">
+        <div>
+            <div class="digest-header">
+                <div class="digest-heading">
+                    <h2 class="digest-greeting" x-text="'Hi, ' + digest.user_name + '.'"></h2>
+                    <span class="digest-subtitle">Here's where things stand.</span>
+                </div>
+                <button class="digest-refresh-btn" :disabled="refreshing" @click="load()">
+                    <svg :class="{ spinning: refreshing }" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                    <span x-text="refreshing ? 'Refreshing…' : 'Refresh'"></span>
+                </button>
+            </div>
+
+            <div class="digest-grid">
+                <div class="digest-card">
+                    <div class="digest-value" x-text="digest.people_count"></div>
+                    <div class="digest-label">People</div>
+                </div>
+                <div class="digest-card">
+                    <div class="digest-value" x-text="digest.conversation_count"></div>
+                    <div class="digest-label">Conversations</div>
+                </div>
+                <div class="digest-card">
+                    <div class="digest-value" x-text="digest.active_projects.length"></div>
+                    <div class="digest-label">Active projects</div>
+                </div>
+                <div class="digest-card">
+                    <div class="digest-value" x-text="digest.last_mood || '—'"></div>
+                    <div class="digest-label">Last mood</div>
+                </div>
+            </div>
+
+            <div class="digest-section">
+                <div class="digest-section-header">At a glance</div>
+                <div class="digest-glance">
+                    <div class="digest-glance-card">
+                        <div class="digest-glance-title">Active projects</div>
+                        <template x-if="digest.active_projects.length === 0">
+                            <div class="digest-glance-empty">No active projects yet.</div>
+                        </template>
+                        <template x-for="p in digest.active_projects" :key="p.title">
+                            <div class="digest-project-row">
+                                <span class="digest-project-title" x-text="p.title"></span>
+                                <span class="digest-project-status" x-text="p.status"></span>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="digest-glance-card">
+                        <div class="digest-glance-title">Pending questions</div>
+                        <div class="digest-watchfors" x-text="digest.pending_questions"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</div>

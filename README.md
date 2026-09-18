@@ -1,6 +1,6 @@
 # anotherme-plugin-digest
 
-Daily digest of projects, people, mood, and pending questions for
+Snapshot of projects, people, mood, and pending questions for
 [AnotherMe](https://github.com/MatousVavra/AnotherMe).
 
 Extracted from the AnotherMe host repository at commit 9a6ef26 — prior
@@ -13,8 +13,10 @@ history lives there.
 | `AI_BASE_URL` | `https://llm.ai.e-infra.cz/v1/` | AI provider base URL (used by the host LLM client via `ctx.llm_client`) |
 | `AI_API_KEY` | — | AI provider API key |
 
-The generation schedule is configurable per-install via the plugin settings
-UI.
+The digest is computed on demand every time the Digest tab loads or its
+Refresh button is pressed. When a diary entry is saved, the plugin records
+a `digest_data_updated_at` timestamp in its store; every rendered digest
+records `digest_refreshed_at`.
 
 ## Development
 

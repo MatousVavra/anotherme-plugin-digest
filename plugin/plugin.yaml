@@ -1,19 +1,18 @@
 name: digest
-version: 0.2.0
-description: Daily digest of projects, people, mood, and pending questions
+version: 0.3.0
+description: Snapshot of projects, people, mood, and pending questions
 author: AnotherMe
 entrypoint: plugin
 capabilities:
   - routes
   - events
+  - ui
 dependencies:
   - memory
 soft_dependencies:
   - name: chat
     enables: "conversation count in digest"
-settings:
-  - key: schedule
-    label: "Generation schedule"
-    type: text
-    default: "daily"
-    description: "When to generate digests"
+ui:
+  tab: Digest
+  icon: sun
+  order: 95

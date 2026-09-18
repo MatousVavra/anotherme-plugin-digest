@@ -1,7 +1,12 @@
 import asyncio
 import sqlite3
+from datetime import datetime, timezone
 
 from fastapi import APIRouter
+
+
+def _now_utc() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _count_rows(conn, table: str, vault_name: str) -> int:
@@ -28,9 +33,16 @@ class Plugin:
         @router.get("")
         async def digest():
             vn = self._ctx.vault_name
-            return await asyncio.to_thread(self._build_digest, vn)
+            result = await asyncio.to_thread(self._build_digest, vn)
+            self._ctx.store.set("digest_refreshed_at", _now_utc())
+            return result
 
         ctx.register_router(router)
+
+        def _on_diary_saved(payload):
+            self._ctx.store.set("digest_data_updated_at", _now_utc())
+
+        ctx.on_event("diary_saved", _on_diary_saved)
 
     def _build_digest(self, vault_name: str) -> dict:
         vault = self._vault.vault_path(vault_name)
